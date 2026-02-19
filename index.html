@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dla Ciebie</title>
+
+<style>
+body{
+    margin:0;
+    font-family: system-ui;
+    background: linear-gradient(135deg,#0f172a,#1e293b);
+    color:white;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    text-align:center;
+}
+
+.card{
+    max-width:320px;
+    padding:30px;
+}
+
+button{
+    margin-top:25px;
+    padding:14px 22px;
+    border:none;
+    border-radius:14px;
+    background:#f472b6;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+}
+
+.fade{
+    animation:fade .5s;
+}
+
+@keyframes fade{
+    from{opacity:0; transform:translateY(10px)}
+    to{opacity:1; transform:translateY(0)}
+}
+</style>
+</head>
+
+<body>
+
+<div class="card fade" id="box">
+    <h2>Hej</h2>
+    <p>Nie wiem czy to prezent</p>
+    <button onclick="next1()">dalej</button>
+</div>
+
+<script>
+
+function next1(){
+document.getElementById("box").innerHTML = `
+<h2>ale</h2>
+<p>trochę rozmów już było</p>
+<button onclick="next2()">dalej</button>
+`;
+}
+
+function next2(){
+document.getElementById("box").innerHTML = `
+<h2>więc</h2>
+<p>w dniu kobiet masz mnie na wyłączność dziś</p>
+<button onclick="play()">odbieram</button>
+`;
+}
+
+function play(){
+document.getElementById("box").innerHTML = `
+<h2>wszystkiego najlepszego</h2>
+<p>napisz do mnie 😌</p>
+<audio autoplay>
+<source src="voice.mp3" type="audio/mpeg">
+</audio>
+`;
+}
+
+</script>
+
+</body>
+</html>
