@@ -6,6 +6,23 @@
 <title>Dla Ciebie</title>
 
 <style>
+.rose {
+  position: fixed;
+  top: -50px;
+  font-size: 24px;
+  animation: fall linear forwards;
+  pointer-events: none;
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(110vh) rotate(360deg);
+    opacity: 0.8;
+  }
+}
+
+    
+    
 body{
     margin:0;
     font-family: system-ui;
@@ -81,6 +98,25 @@ document.getElementById("box").innerHTML = `
 `;
 }
 
+</script>
+<script>
+function createRose() {
+  const rose = document.createElement("div");
+  rose.classList.add("rose");
+  rose.innerHTML = "🌹";
+
+  rose.style.left = Math.random() * 100 + "vw";
+  rose.style.animationDuration = (3 + Math.random() * 5) + "s";
+  rose.style.fontSize = (20 + Math.random() * 30) + "px";
+
+  document.body.appendChild(rose);
+
+  setTimeout(() => {
+    rose.remove();
+  }, 8000);
+}
+
+setInterval(createRose, 400);
 </script>
 
 </body>
