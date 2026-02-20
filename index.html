@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dla Najlepszej Kobiety</title>
+<title>Dla Ciebie</title>
 
 <style>
 body{
@@ -26,13 +26,13 @@ body{
 }
 
 button{
-    margin-top:25px;
-    padding:14px 22px;
+    margin-top:15px;
+    padding:12px 20px;
     border:none;
     border-radius:14px;
     background:#f472b6;
     color:white;
-    font-size:16px;
+    font-size:15px;
     cursor:pointer;
     transition:0.2s;
 }
@@ -95,7 +95,7 @@ button:hover{
     background:#1e293b;
 }
 
-/* SPADAJĄCA RÓŻA */
+/* SPADAJĄCE RÓŻE */
 
 .rose {
   position: fixed;
@@ -119,7 +119,7 @@ button:hover{
 <body>
 
 <div class="card" id="box">
-    <h2>No dobra</h2>
+    <h2>No dobra...</h2>
     <p>wiem, wiem 😌 8 marca.</p>
     <button onclick="next1()">dalej</button>
 </div>
@@ -135,7 +135,7 @@ button:hover{
 
 <script>
 
-/* -------- TEKST -------- */
+/* ---------- TEKST ---------- */
 
 function next1(){
 document.getElementById("box").innerHTML = `
@@ -165,9 +165,19 @@ document.getElementById("box").innerHTML = `
 Dzięki za wspomnienia ✨<br><br>
 Cieszę się, że jesteś 🌸
 </p>
+<button onclick="playVoice()">posłuchaj 🎙️</button>
 <button onclick="showGallery()">małe wspomnienia 📸</button>
 `;
 }
+
+/* ---------- GŁOSÓWKA ---------- */
+
+function playVoice(){
+    const audio = new Audio("glosowka.mp3");
+    audio.play();
+}
+
+/* ---------- GALERIA ---------- */
 
 function showGallery(){
 let galleryHTML = '<h2>Nasze momenty 📷</h2><div class="gallery">';
@@ -178,7 +188,7 @@ galleryHTML += '</div>';
 document.getElementById("box").innerHTML = galleryHTML;
 }
 
-/* -------- LIGHTBOX -------- */
+/* ---------- LIGHTBOX ---------- */
 
 const images = [];
 for(let i=1;i<=12;i++){
@@ -207,7 +217,7 @@ currentIndex = (currentIndex - 1 + images.length) % images.length;
 document.getElementById("lightbox-img").src = images[currentIndex];
 }
 
-/* -------- SPADAJĄCE RÓŻE -------- */
+/* ---------- SPADAJĄCE RÓŻE ---------- */
 
 function createRose() {
   const rose = document.createElement("div");
