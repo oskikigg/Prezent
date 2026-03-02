@@ -8,8 +8,8 @@
 <style>
 body{
     margin:0;
-    font-family: system-ui;
-    background: linear-gradient(135deg,#0f172a,#1e293b);
+    font-family:system-ui;
+    background:linear-gradient(135deg,#0f172a,#1e293b);
     color:white;
     display:flex;
     justify-content:center;
@@ -30,68 +30,18 @@ button{
     padding:12px 20px;
     border:none;
     border-radius:14px;
-    background:#f472b6;
+    background:#f43f5e;
     color:white;
     font-size:15px;
     cursor:pointer;
-    transition:0.2s;
+    transition:.2s;
 }
 
-button:hover{
-    transform:scale(1.05);
-}
+button:hover{transform:scale(1.05);}
 
-input{
-    padding:10px;
-    border-radius:10px;
-    border:none;
-    margin-top:10px;
-    outline:none;
-}
-
-.letters{
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
-    gap:10px;
-    margin-top:20px;
-}
-
-.letter{
-    width:50px;
-    height:50px;
-    background:#1e293b;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    border-radius:10px;
-    font-size:20px;
-    cursor:pointer;
-    user-select:none;
-}
-
-.slot-container{
-    display:flex;
-    justify-content:center;
-    gap:10px;
-    margin-top:20px;
-}
-
-.slot{
-    width:50px;
-    height:50px;
-    border:2px dashed #f472b6;
-    border-radius:10px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-size:20px;
-}
-
-.success{
-    color:#4ade80;
+audio{
     margin-top:15px;
-    font-weight:bold;
+    width:100%;
 }
 
 .gallery{
@@ -128,17 +78,52 @@ input{
     max-height:80%;
 }
 
-.rose {
-  position: fixed;
-  top: -50px;
-  pointer-events:none;
-  animation: fall linear forwards;
+.slot-container{
+    display:flex;
+    justify-content:center;
+    gap:8px;
+    margin-top:15px;
 }
 
-@keyframes fall {
-  to {
-    transform: translateY(110vh) rotate(360deg);
-  }
+.slot{
+    width:40px;
+    height:40px;
+    border:2px dashed #f43f5e;
+    border-radius:8px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:18px;
+}
+
+.letters{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:8px;
+    margin-top:15px;
+}
+
+.letter{
+    width:40px;
+    height:40px;
+    background:#1e293b;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.rose{
+  position:fixed;
+  top:-50px;
+  pointer-events:none;
+  animation:fall linear forwards;
+}
+
+@keyframes fall{
+  to{transform:translateY(110vh) rotate(360deg);}
 }
 </style>
 </head>
@@ -146,135 +131,158 @@ input{
 <body>
 
 <div class="card" id="box">
-    <h2>No dobra...</h2>
-    <p>wiem, wiem 😌 8 marca.</p>
-    <button onclick="next1()">dalej</button>
+<h2>Otwórz gdy tęsknisz 🤍</h2>
+<button onclick="startExperience()">Otwórz</button>
 </div>
 
 <div class="lightbox" id="lightbox">
-    <img id="lightbox-img">
-    <button onclick="closeLightbox()">zamknij</button>
+<img id="lightbox-img">
+<button onclick="closeLightbox()">zamknij</button>
 </div>
+
+<audio id="bgMusic" src="muzyka.mp3" loop></audio>
 
 <script>
 
-/* TEKST */
+const bgMusic = document.getElementById("bgMusic");
+bgMusic.volume = 0.25;
+
+function startExperience(){
+bgMusic.play().catch(()=>{});
+next1();
+}
+
+/* TEKSTY */
 
 function next1(){
-document.getElementById("box").innerHTML = `
-<h2>Słyszałem</h2>
-<p>że nawet zwiędnięty kwiat się liczy 🌹</p>
+document.getElementById("box").innerHTML=`
+<h2>Hej 😌</h2>
+<p>Wiem że dzisiaj 8 marca...</p>
 <button onclick="next2()">dalej</button>
 `;
 }
 
 function next2(){
-document.getElementById("box").innerHTML = `
-<h2>Więc proszę</h2>
-<p>Masz tu internetowego kwiatka 🌹</p>
-<button onclick="next3()">ale serio...</button>
+document.getElementById("box").innerHTML=`
+<h2>No więc</h2>
+<p>Nawet jeśli to tylko internetowy kwiat...</p>
+<p>🌹</p>
+<button onclick="next3()">dalej</button>
 `;
 }
 
 function next3(){
-document.getElementById("box").innerHTML = `
-<h2>Tak serio</h2>
-<button onclick="startGame()">🔒 Rozwiąż, żeby dostać hasło</button>
+document.getElementById("box").innerHTML=`
+<h2>Chciałem tylko powiedzieć</h2>
+<p>że jesteś dla mnie ważna.</p>
+<button onclick="showVoice()">Posłuchaj</button>
 `;
+}
+
+/* GŁOSÓWKA */
+
+function showVoice(){
+document.getElementById("box").innerHTML=`
+<h2>Specjalnie dla Ciebie 🎙</h2>
+<audio id="voice" src="glosowka.mp3" controls></audio>
+<button onclick="startGame()">A teraz coś dla Ciebie</button>
+`;
+
+const voice=document.getElementById("voice");
+
+voice.addEventListener("play",()=>{
+fadeMusic(0.05);
+});
+
+voice.addEventListener("pause",()=>{
+fadeMusic(0.25);
+});
+
+voice.addEventListener("ended",()=>{
+fadeMusic(0.25);
+});
+}
+
+function fadeMusic(target){
+let step = bgMusic.volume > target ? -0.01 : 0.01;
+let fade = setInterval(()=>{
+if((step<0 && bgMusic.volume<=target) || (step>0 && bgMusic.volume>=target)){
+clearInterval(fade);
+}else{
+bgMusic.volume += step;
+}
+},50);
 }
 
 /* MINI GRA */
 
-const correctWord = "KWIECIEŃ";
+const correctWord="KWIECIEŃ";
 
 function startGame(){
 
-let letters = correctWord.split('').sort(() => Math.random() - 0.5);
+let letters=correctWord.split('').sort(()=>Math.random()-0.5);
 
-let slotsHTML = '';
+let slotsHTML='';
 for(let i=0;i<correctWord.length;i++){
-    slotsHTML += `<div class="slot" data-index="${i}"></div>`;
+slotsHTML+=`<div class="slot"></div>`;
 }
 
-let lettersHTML = '';
+let lettersHTML='';
 letters.forEach(l=>{
-    lettersHTML += `<div class="letter" draggable="true">${l}</div>`;
+lettersHTML+=`<div class="letter" onclick="addLetter('${l}',this)">${l}</div>`;
 });
 
-document.getElementById("box").innerHTML = `
-<h2>Ułóż poprawne słowo 💭</h2>
-<p>To coś, co coś dla nas znaczy...</p>
+document.getElementById("box").innerHTML=`
+<h2>Ułóż słowo 💭</h2>
+<p>Coś co coś znaczy...</p>
 <div class="slot-container">${slotsHTML}</div>
 <div class="letters">${lettersHTML}</div>
-<p id="gameMessage"></p>
 `;
-
-initDrag();
 }
 
-function initDrag(){
-const letters = document.querySelectorAll('.letter');
-const slots = document.querySelectorAll('.slot');
-
-letters.forEach(letter=>{
-    letter.addEventListener('dragstart', e=>{
-        e.dataTransfer.setData("text", letter.textContent);
-        setTimeout(()=> letter.style.visibility="hidden",0);
-    });
-
-    letter.addEventListener('dragend', e=>{
-        letter.style.visibility="visible";
-    });
-});
-
-slots.forEach(slot=>{
-    slot.addEventListener('dragover', e=>{
-        e.preventDefault();
-    });
-
-    slot.addEventListener('drop', e=>{
-        e.preventDefault();
-        const letter = e.dataTransfer.getData("text");
-        slot.textContent = letter;
-        checkWord();
-    });
-});
+function addLetter(letter,el){
+const slots=document.querySelectorAll(".slot");
+for(let slot of slots){
+if(slot.textContent===""){
+slot.textContent=letter;
+el.style.visibility="hidden";
+break;
+}
+}
+checkWord();
 }
 
 function checkWord(){
-let result = "";
-document.querySelectorAll('.slot').forEach(slot=>{
-    result += slot.textContent;
-});
-
-if(result === correctWord){
-    document.getElementById("box").innerHTML = `
-    <h2>Odblokowane 💖</h2>
-    <p>Twoje hasło to:</p>
-    <h1>${correctWord.toLowerCase()}</h1>
-    <button onclick="showGallery()">Otwórz wspomnienia</button>
-    `;
+let result="";
+document.querySelectorAll(".slot").forEach(s=>result+=s.textContent);
+if(result===correctWord){
+document.getElementById("box").innerHTML=`
+<h2>Odblokowane 🤍</h2>
+<p>Hasło to:</p>
+<h1>kwiecień</h1>
+<button onclick="showGallery()">Otwórz wspomnienia</button>
+`;
 }
 }
 
 /* GALERIA */
 
 function showGallery(){
-let galleryHTML = '<h2>Nasze momenty 📷</h2><div class="gallery">';
+let galleryHTML='<h2>Nasze momenty 📷</h2><div class="gallery">';
 for(let i=1;i<=12;i++){
-    galleryHTML += `<img src="zdjecie${i}.png" onclick="openLightbox(${i-1})">`;
+galleryHTML+=`<img src="zdjecie${i}.png" onclick="openLightbox(${i-1})">`;
 }
-galleryHTML += '</div>';
-document.getElementById("box").innerHTML = galleryHTML;
+galleryHTML+='</div>';
+document.getElementById("box").innerHTML=galleryHTML;
 }
 
-const images = [];
+const images=[];
 for(let i=1;i<=12;i++){
-    images.push(`zdjecie${i}.png`);
+images.push(`zdjecie${i}.png`);
 }
 
 function openLightbox(index){
-document.getElementById("lightbox-img").src = images[index];
+document.getElementById("lightbox-img").src=images[index];
 document.getElementById("lightbox").style.display="flex";
 }
 
@@ -282,19 +290,19 @@ function closeLightbox(){
 document.getElementById("lightbox").style.display="none";
 }
 
-/* RÓŻE */
+/* RÓŻA */
 
 function createRose(){
 const rose=document.createElement("div");
 rose.classList.add("rose");
 rose.innerHTML="🌹";
 rose.style.left=Math.random()*100+"vw";
-rose.style.animationDuration=(4+Math.random()*4)+"s";
-rose.style.fontSize=(20+Math.random()*20)+"px";
+rose.style.animationDuration=(5+Math.random()*3)+"s";
+rose.style.fontSize="26px";
 document.body.appendChild(rose);
 setTimeout(()=>rose.remove(),8000);
 }
-setInterval(createRose,500);
+setInterval(createRose,800);
 
 </script>
 
