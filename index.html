@@ -26,7 +26,7 @@ body{
 }
 
 button{
-    margin-top:15px;
+    margin:8px 0;
     padding:12px 20px;
     border:none;
     border-radius:14px;
@@ -39,6 +39,14 @@ button{
 
 button:hover{
     transform:scale(1.05);
+}
+
+input{
+    padding:10px;
+    border-radius:10px;
+    border:none;
+    margin-top:10px;
+    outline:none;
 }
 
 .player{
@@ -116,6 +124,27 @@ button:hover{
     opacity: 0.8;
   }
 }
+
+/* BŁĘDNE HASŁO */
+
+.error-input {
+    border: 2px solid #ef4444;
+    background-color: #fee2e2;
+    color: #7f1d1d;
+}
+
+@keyframes shake {
+    0% { transform: translateX(0); }
+    20% { transform: translateX(-8px); }
+    40% { transform: translateX(8px); }
+    60% { transform: translateX(-6px); }
+    80% { transform: translateX(6px); }
+    100% { transform: translateX(0); }
+}
+
+.shake {
+    animation: shake 0.4s;
+}
 </style>
 </head>
 
@@ -142,27 +171,33 @@ button:hover{
 
 let bgMusic = new Audio("muzyka.mp3");
 bgMusic.loop = true;
-bgMusic.volume = 0.4;
+bgMusic.volume = 0.25;
 
 document.addEventListener("click", () => {
     bgMusic.play();
 }, { once: true });
 
-function fadeMusic(targetVolume, duration = 1000) {
-    const step = 0.02;
-    const intervalTime = duration / (Math.abs(bgMusic.volume - targetVolume) / step);
-    
-    const fade = setInterval(() => {
-        if (bgMusic.volume < targetVolume) {
-            bgMusic.volume = Math.min(bgMusic.volume + step, targetVolume);
-        } else {
-            bgMusic.volume = Math.max(bgMusic.volume - step, targetVolume);
-        }
+function fadeMusic(targetVolume, duration = 2000) {
+    const startVolume = bgMusic.volume;
+    const difference = targetVolume - startVolume;
+    const steps = 50;
+    const stepTime = duration / steps;
+    let currentStep = 0;
 
-        if (bgMusic.volume === targetVolume) {
+    const fade = setInterval(() => {
+        currentStep++;
+        const progress = currentStep / steps;
+        const ease = progress < 0.5
+            ? 2 * progress * progress
+            : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+
+        bgMusic.volume = startVolume + difference * ease;
+
+        if (currentStep >= steps) {
+            bgMusic.volume = targetVolume;
             clearInterval(fade);
         }
-    }, intervalTime);
+    }, stepTime);
 }
 
 /* TEKST */
@@ -191,10 +226,13 @@ Nie trzeba podlewać.<br>
 function next3(){
 document.getElementById("box").innerHTML = `
 <h2>Tak serio</h2>
-<p>
-Dzięki za wspomnienia ✨<br><br>
-Cieszę się, że jesteś 🌸
-</p>
+<p>Wybierz coś tylko dla siebie 💌</p>
+
+<button onclick="openMessage(1)">Otwórz, gdy masz gorszy dzień</button>
+<button onclick="openMessage(2)">Otwórz, gdy się stresujesz</button>
+<button onclick="openMessage(3)">Otwórz, gdy tęsknisz</button>
+
+<br><br>
 
 <div class="player">
     <audio id="audio" src="glosowka.mp3"></audio>
@@ -203,10 +241,76 @@ Cieszę się, że jesteś 🌸
     <div id="time">0:00 / 0:00</div>
 </div>
 
-<button onclick="showGallery()">małe wspomnienia 📸</button>
+<br>
+
+<button onclick="askPassword()">🔒 Otwórz nasze wspomnienia</button>
 `;
 
 initPlayer();
+}
+
+/* WIADOMOŚCI */
+
+function openMessage(type){
+    let content = "";
+
+    if(type === 1){
+        content = `<h2>Na gorszy dzień 🤍</h2>
+        <p>Pamiętaj — jesteś silniejsza niż myślisz.<br>
+        A ja zawsze stoję po Twojej stronie.</p>
+        <button onclick="next3()">wróć</button>`;
+    }
+
+    if(type === 2){
+        content = `<h2>Na stres 🫶</h2>
+        <p>Oddychaj.<br>
+        Wszystko ogarniasz lepiej niż Ci się wydaje.<br>
+        A jeśli nie — ogarniemy razem.</p>
+        <button onclick="next3()">wróć</button>`;
+    }
+
+    if(type === 3){
+        content = `<h2>Gdy tęsknisz 🌙</h2>
+        <p>Tęsknota to tylko dowód,<br>
+        że coś jest ważne.<br><br>
+        Dla mnie Ty jesteś.</p>
+        <button onclick="next3()">wróć</button>`;
+    }
+
+    document.getElementById("box").innerHTML = content;
+}
+
+/* HASŁO */
+
+const secretPassword = "kwiecień";
+
+function askPassword(){
+    document.getElementById("box").innerHTML = `
+        <h2>Hasło 🔐</h2>
+        <p>Wpisz nasze tajne hasło</p>
+        <input type="password" id="passwordInput">
+        <br>
+        <button onclick="checkPassword()">Otwórz</button>
+        <button onclick="next3()">wróć</button>
+        <p id="error" style="color:#f87171;"></p>
+    `;
+}
+
+function checkPassword(){
+    const inputField = document.getElementById("passwordInput");
+    const input = inputField.value;
+
+    if(input === secretPassword){
+        showGallery();
+    } else {
+        document.getElementById("error").textContent = "Niepoprawne hasło 💭";
+        inputField.classList.add("error-input");
+        inputField.classList.add("shake");
+
+        setTimeout(() => {
+            inputField.classList.remove("shake");
+        }, 400);
+    }
 }
 
 /* AUDIO */
@@ -233,17 +337,17 @@ function initPlayer(){
     });
 
     audio.addEventListener("ended", () => {
-        fadeMusic(0.4,1200);
+        fadeMusic(0.25,2000);
     });
 }
 
 function togglePlay(){
     if(audio.paused){
         audio.play();
-        fadeMusic(0.04,1200);
+        fadeMusic(0.03,2000);
     } else {
         audio.pause();
-        fadeMusic(0.4,1200);
+        fadeMusic(0.25,2000);
     }
 }
 
