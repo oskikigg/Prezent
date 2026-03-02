@@ -41,8 +41,6 @@ button:hover{
     transform:scale(1.05);
 }
 
-/* AUDIO PLAYER */
-
 .player{
     margin-top:15px;
 }
@@ -51,8 +49,6 @@ button:hover{
     width:100%;
     margin-top:10px;
 }
-
-/* GALERIA */
 
 .gallery{
     display:grid;
@@ -74,8 +70,6 @@ button:hover{
 .gallery img:hover{
     transform:scale(1.05);
 }
-
-/* LIGHTBOX */
 
 .lightbox{
     display:none;
@@ -105,8 +99,6 @@ button:hover{
     margin:0 10px;
     background:#1e293b;
 }
-
-/* RÓŻE */
 
 .rose {
   position: fixed;
@@ -145,6 +137,33 @@ button:hover{
 </div>
 
 <script>
+
+/* MUZYKA W TLE */
+
+let bgMusic = new Audio("muzyka.mp3");
+bgMusic.loop = true;
+bgMusic.volume = 0.4;
+
+document.addEventListener("click", () => {
+    bgMusic.play();
+}, { once: true });
+
+function fadeMusic(targetVolume, duration = 1000) {
+    const step = 0.02;
+    const intervalTime = duration / (Math.abs(bgMusic.volume - targetVolume) / step);
+    
+    const fade = setInterval(() => {
+        if (bgMusic.volume < targetVolume) {
+            bgMusic.volume = Math.min(bgMusic.volume + step, targetVolume);
+        } else {
+            bgMusic.volume = Math.max(bgMusic.volume - step, targetVolume);
+        }
+
+        if (bgMusic.volume === targetVolume) {
+            clearInterval(fade);
+        }
+    }, intervalTime);
+}
 
 /* TEKST */
 
@@ -186,10 +205,11 @@ Cieszę się, że jesteś 🌸
 
 <button onclick="showGallery()">małe wspomnienia 📸</button>
 `;
+
 initPlayer();
 }
 
-/* AUDIO LOGIC */
+/* AUDIO */
 
 let audio, progress, timeDisplay;
 
@@ -211,13 +231,19 @@ function initPlayer(){
     progress.addEventListener("input", () => {
         audio.currentTime = progress.value;
     });
+
+    audio.addEventListener("ended", () => {
+        fadeMusic(0.4,1200);
+    });
 }
 
 function togglePlay(){
     if(audio.paused){
         audio.play();
+        fadeMusic(0.08,1200);
     } else {
         audio.pause();
+        fadeMusic(0.4,1200);
     }
 }
 
